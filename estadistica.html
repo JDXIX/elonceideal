@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Estadísticas</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="icon" href="images/fevicon.png" type="image/gif" />
+  <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css" />
+  <link rel="stylesheet" href="css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .suggestions {
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      position: absolute;
+      z-index: 1000;
+      background: white;
+      width: 100%;
+    }
+    .suggestions div {
+      padding: 10px;
+      cursor: pointer;
+    }
+    .suggestions div:hover {
+      background: #f0f0f0;
+    }
+    #pdfPreview {
+      width: 100%;
+      height: 400px;
+      border: none;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado y navegación -->
+  <div class="header_section">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="logo">
+        <a href="index.html"><img src="images/logo.png" style="width: 100px;" alt="Logo"></a>
+      </div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" 
+              data-target="#navbarNav" aria-controls="navbarNav" 
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">El Once Ideal</a></li>
+          <li class="nav-item"><a class="nav-link" href="registro.html">Registro</a></li>
+          <li class="nav-item"><a class="nav-link" href="estadios.html">Estadios</a></li>
+          <li class="nav-item active"><a class="nav-link" href="estadistica.html">Estadísticas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Sección principal -->
+  <div class="news_section layout_padding">
+    <div class="container">
+      <h1>Registro de Estadísticas de Jugador</h1>
+      <form id="formEstadisticas">
+<!-- Selección de equipos para formar el partido -->
+<div class="form-group">
+  <label for="equipoA">Equipo A</label>
+  <select class="form-control" id="equipoA" name="equipoA" required>
+    <option value="">Seleccione Equipo A</option>
+    <option value="Dep. Cuenca">Dep. Cuenca</option>
+    <option value="Barcelona SC">Barcelona SC</option>
+    <option value="Macará">Macará</option>
+    <option value="U. Católica">U. Católica</option>
+    <option value="Libertad FC">Libertad FC</option>
+    <option value="Aucas">Aucas</option>
+    <option value="Mushuc Runa">Mushuc Runa</option>
+    <option value="Delfín">Delfín</option>
+    <option value="Orense">Orense</option>
+    <option value="LDU Quito">LDU Quito</option>
+    <option value="El Nacional">El Nacional</option>
+    <option value="Cuniburo">Cuniburo</option>
+    <option value="Independiente">Independiente</option>
+    <option value="Técnico Universitario">Técnico Universitario</option>
+    <option value="Manta">Manta</option>
+    <option value="Emelec">Emelec</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label for="equipoB">Equipo B</label>
+  <select class="form-control" id="equipoB" name="equipoB" required>
+    <option value="">Seleccione Equipo B</option>
+    <option value="Dep. Cuenca">Dep. Cuenca</option>
+    <option value="Barcelona SC">Barcelona SC</option>
+    <option value="Macará">Macará</option>
+    <option value="U. Católica">U. Católica</option>
+    <option value="Libertad FC">Libertad FC</option>
+    <option value="Aucas">Aucas</option>
+    <option value="Mushuc Runa">Mushuc Runa</option>
+    <option value="Delfín">Delfín</option>
+    <option value="Orense">Orense</option>
+    <option value="LDU Quito">LDU Quito</option>
+    <option value="El Nacional">El Nacional</option>
+    <option value="Cuniburo">Cuniburo</option>
+    <option value="Independiente">Independiente</option>
+    <option value="Técnico Universitario">Técnico Universitario</option>
+    <option value="Manta">Manta</option>
+    <option value="Emelec">Emelec</option>
+  </select>
+</div>
+        <!-- Campo para buscar jugador (con sugerencias) -->
+        <div class="form-group position-relative">
+          <label for="nombreJugador">Buscar Jugador</label>
+          <input type="text" class="form-control" id="nombreJugador" name="nombreJugador" placeholder="Buscar jugador" required autocomplete="off">
+          <div id="suggestions" class="suggestions"></div>
+        </div>
+        <div class="form-group">
+          <label for="asistencias">Asistencias</label>
+          <input type="number" class="form-control" id="asistencias" name="asistencias" required>
+        </div>
+        <div class="form-group">
+          <label for="goles">Goles</label>
+          <input type="number" class="form-control" id="goles" name="goles" required>
+        </div>
+        <div class="form-group">
+          <label for="tarjetas">Tarjetas</label>
+          <input type="number" class="form-control" id="tarjetas" name="tarjetas" required>
+        </div>
+        <!-- Lesiones se trabaja como número -->
+        <div class="form-group">
+          <label for="lesiones">Lesiones</label>
+          <input type="number" class="form-control" id="lesiones" name="lesiones" required>
+        </div>
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input type="date" class="form-control" id="fecha" name="fecha" required>
+        </div>
+        <!-- Botón único para previsualizar: se mostrará el gráfico individual en el modal -->
+        <button type="button" class="btn btn-primary mt-3" id="btnPrevisualizar">Previsualizar Estadísticas</button>
+      </form>
+
+      <!-- La tabla de registros se muestra después del botón -->
+      <h2 class="mt-4">Estadísticas Registradas</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th>Partido</th>
+            <th>Asistencias</th>
+            <th>Goles</th>
+            <th>Tarjetas</th>
+            <th>Lesiones</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tablaEstadisticas">
+          <!-- Se agregarán los registros aquí -->
+        </tbody>
+      </table>
+
+      <!-- Modal de Previsualización -->
+      <div class="modal fade" id="modalPrevisualizacion" tabindex="-1" role="dialog" aria-labelledby="modalPrevisualizacionLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalPrevisualizacionLabel">Previsualización de Estadísticas</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Información textual -->
+              <p><strong>Jugador:</strong> <span id="prevNombre"></span></p>
+              <p><strong>Partido:</strong> <span id="prevPartido"></span></p>
+              <p><strong>Asistencias:</strong> <span id="prevAsistencias"></span></p>
+              <p><strong>Goles:</strong> <span id="prevGoles"></span></p>
+              <p><strong>Tarjetas:</strong> <span id="prevTarjetas"></span></p>
+              <p><strong>Lesiones:</strong> <span id="prevLesiones"></span></p>
+              <p><strong>Fecha:</strong> <span id="prevFecha"></span></p>
+              <!-- Canvas para el gráfico individual (del jugador actual) en el modal -->
+              <h5 class="mt-3">Gráfico Estadístico del Jugador</h5>
+              <canvas id="modalChart" width="400" height="200"></canvas>
+              <h5 class="mt-3">Previsualización del PDF:</h5>
+              <iframe id="pdfPreview" style="width: 100%; height: 400px; border: none; display: none;"></iframe>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              <!-- Botón para registrar (o actualizar) la estadística -->
+              <button type="button" class="btn btn-primary" id="btnRegistrarEstadisticasModal">Registrar Estadísticas</button>
+              <button type="button" class="btn btn-success" id="btnDescargarPDF">Descargar PDF</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Fin Modal -->
+    </div>
+  </div>
+   <!-- sección del pie de página -->
+   <div class="footer_section layout_padding">
+    <div class="container">
+       <div class="row">
+          <div class="col-lg-3 col-sm-6">
+             <div class="footer_logo"><a href="index.html"><img src="images/logo.png"></a></div>
+             <h1 class="adderss_text">Contactos</h1>
+             <div class="map_icon"><img src="images/map-icon.png"><span class="paddlin_left_0">Universidad de las Fuerzas Armadas Espe</span></div>
+             <div class="map_icon"><img src="images/call-icon.png"><span class="paddlin_left_0">+593 998754321</span></div>
+             <div class="map_icon"><img src="images/mail-icon.png"><span class="paddlin_left_0">ESPE<a href="https://www.espe.edu.ec/"> AQUÍ</a></span></div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <h1 class="adderss_text">Desarrolladores</h1>
+             <div class="hiphop_text_1">Somos desarrolladores de software, apasionados por la tecnología y las soluciones digitales. Nos dedicamos a diseñar, construir y mantener aplicaciones, sistemas y plataformas que hacen la vida más fácil y conectada.</div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <h1 class="adderss_text">En este caso hemos creado</h1>
+             <div class="Useful_text">Creamos esta página, diseñada para vivir el fútbol como nunca antes</div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <h1 class="adderss_text">La mejor información del deporte</h1>
+             <div class="subscribe_bt"><a href="#">Regresar al Inicio</a></div>
+             <div class="social_icon">
+                <ul>
+                   <li><a href="https://es-es.facebook.com/"><img src="images/fb-icon.png"></a></li>
+                   <li><a href="https://x.com/?mx=2"><img src="images/twitter-icon.png"></a></li>
+                   <li><a href="https://es.linkedin.com/"><img src="images/linkedin-icon.png"></a></li>
+                   <li><a href="https://www.instagram.com/"><img src="images/instagram-icon.png"></a></li>
+                </ul>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- fin de la sección del pie de página -->
+ <!-- sección de derechos de autor -->
+ <div class="copyright_section">
+    <div class="container">
+       <p class="copyright_text">2025 Todos los derechos reservados. Diseño por <a href="https://www.espe.edu.ec/">Programación Web-Cuarto Semestre</a></p>
+    </div>
+ </div>
+
+  <!-- Scripts -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="js/custom.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Array para almacenar las estadísticas temporalmente
+      let estadisticasData = [];
+      // Variable para saber si se está editando (índice del array)
+      let currentEditIndex = null;
+      // Array simulado de jugadores para sugerencias
+      const jugadores = ["Michael Estrada", "Jordy Caicedo", "José Carabalí", "Felipe Mejía", "Ángel Mena"];
+      // Variable para la instancia del gráfico individual en el modal
+      let modalChartInstance = null;
+  
+      // Lógica de sugerencias para "Buscar Jugador"
+      document.getElementById('nombreJugador').addEventListener('input', function () {
+        const input = this.value.toLowerCase();
+        const suggestionsDiv = document.getElementById('suggestions');
+        suggestionsDiv.innerHTML = '';
+        if (!input) return;
+        const filtrados = jugadores.filter(jugador => jugador.toLowerCase().includes(input));
+        filtrados.forEach(jugador => {
+          const div = document.createElement('div');
+          div.textContent = jugador;
+          div.addEventListener('click', function () {
+            document.getElementById('nombreJugador').value = jugador;
+            suggestionsDiv.innerHTML = '';
+          });
+          suggestionsDiv.appendChild(div);
+        });
+      });
+  
+      // Botón único: Registrar Estadísticas (desde el formulario)
+      document.getElementById('btnPrevisualizar').addEventListener('click', function () {
+        // Recoger datos del formulario
+        const equipoA = document.getElementById('equipoA').value;
+        const equipoB = document.getElementById('equipoB').value;
+        const nombreJugador = document.getElementById('nombreJugador').value;
+        const asistencias = document.getElementById('asistencias').value;
+        const goles = document.getElementById('goles').value;
+        const tarjetas = document.getElementById('tarjetas').value;
+        const lesiones = document.getElementById('lesiones').value;
+        const fecha = document.getElementById('fecha').value;
+  
+        // Validar que todos los campos estén completos
+        if (!equipoA || !equipoB || !nombreJugador || !asistencias || !goles || !tarjetas || !lesiones || !fecha) {
+          alert("Por favor, complete todos los campos antes de registrar.");
+          return;
+        }
+  
+        // Formar el partido con formato "EquipoA VS EquipoB"
+        const partido = equipoA + " VS " + equipoB;
+  
+        // Llenar la vista previa en el modal
+        document.getElementById('prevNombre').textContent = nombreJugador;
+        document.getElementById('prevPartido').textContent = partido;
+        document.getElementById('prevAsistencias').textContent = asistencias;
+        document.getElementById('prevGoles').textContent = goles;
+        document.getElementById('prevTarjetas').textContent = tarjetas;
+        document.getElementById('prevLesiones').textContent = lesiones;
+        document.getElementById('prevFecha').textContent = fecha;
+  
+        // Generar el gráfico individual en el modal
+        generarGraficoIndividual({
+          asistencias: parseInt(asistencias),
+          goles: parseInt(goles),
+          tarjetas: parseInt(tarjetas),
+          lesiones: parseInt(lesiones)
+        });
+  
+        // Mostrar el modal de registro
+        const modalPrevisualizacion = new bootstrap.Modal(document.getElementById('modalPrevisualizacion'));
+        modalPrevisualizacion.show();
+      });
+  
+      // Función para generar un gráfico individual en el modal
+      function generarGraficoIndividual(datos) {
+        const ctx = document.getElementById('modalChart').getContext('2d');
+        if (modalChartInstance) {
+          modalChartInstance.destroy();
+        }
+        modalChartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Asistencias', 'Goles', 'Tarjetas', 'Lesiones'],
+            datasets: [{
+              label: 'Estadísticas',
+              data: [datos.asistencias, datos.goles, datos.tarjetas, datos.lesiones],
+              backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(153, 102, 255, 0.2)'
+              ],
+              borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(153, 102, 255, 1)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+  
+      // Botón en el modal para registrar (o actualizar) la estadística
+      document.getElementById('btnRegistrarEstadisticasModal').addEventListener('click', function () {
+        // Recoger datos del formulario
+        const equipoA = document.getElementById('equipoA').value;
+        const equipoB = document.getElementById('equipoB').value;
+        const nombreJugador = document.getElementById('nombreJugador').value;
+        const asistencias = parseInt(document.getElementById('asistencias').value);
+        const goles = parseInt(document.getElementById('goles').value);
+        const tarjetas = parseInt(document.getElementById('tarjetas').value);
+        const lesiones = parseInt(document.getElementById('lesiones').value);
+        const fecha = document.getElementById('fecha').value;
+        const partido = equipoA + " VS " + equipoB;
+  
+        const nuevaEstadistica = {
+          nombre_jugador: nombreJugador,
+          partido: partido,
+          asistencias: asistencias,
+          goles: goles,
+          tarjetas: tarjetas,
+          lesiones: lesiones,
+          fecha: fecha
+        };
+  
+        if (currentEditIndex !== null) {
+          estadisticasData[currentEditIndex] = nuevaEstadistica;
+          currentEditIndex = null;
+        } else {
+          estadisticasData.push(nuevaEstadistica);
+        }
+  
+        actualizarTablaEstadisticas();
+        // (Opcional) Puedes regenerar el gráfico general si lo deseas
+        document.getElementById('formEstadisticas').reset();
+        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalPrevisualizacion'));
+        modalInstance.hide();
+      });
+  
+      // Botón para descargar el PDF
+      document.getElementById('btnDescargarPDF').addEventListener('click', function () {
+        generarPDF();
+      });
+  
+      // Función para actualizar la tabla de estadísticas
+      function actualizarTablaEstadisticas() {
+        const tabla = document.getElementById('tablaEstadisticas');
+        tabla.innerHTML = '';
+        estadisticasData.forEach((est, index) => {
+          const row = document.createElement('tr');
+          row.dataset.index = index;
+          row.innerHTML = `
+            <td>${est.nombre_jugador}</td>
+            <td>${est.partido}</td>
+            <td>${est.asistencias}</td>
+            <td>${est.goles}</td>
+            <td>${est.tarjetas}</td>
+            <td>${est.lesiones}</td>
+            <td>${est.fecha}</td>
+            <td>
+              <button class="btn btn-info btn-sm" onclick="editarEstadistica(this)">Editar</button>
+            </td>
+          `;
+          tabla.appendChild(row);
+        });
+      }
+  
+      // Función para generar el PDF usando jsPDF
+      function generarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+  
+        // Obtener datos del formulario
+        const nombre = document.getElementById('prevNombre').textContent;
+        const partido = document.getElementById('prevPartido').textContent;
+        const asistencias = document.getElementById('prevAsistencias').textContent;
+        const goles = document.getElementById('prevGoles').textContent;
+        const tarjetas = document.getElementById('prevTarjetas').textContent;
+        const lesiones = document.getElementById('prevLesiones').textContent;
+        const fecha = document.getElementById('prevFecha').textContent;
+  
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+  
+        // Encabezado
+        doc.setFillColor(0, 66, 126);
+        doc.rect(0, 0, pageWidth, 30, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.text("El Once Ideal", pageWidth / 2, 20, { align: "center" });
+        doc.addImage('images/logo.png', 'PNG', 10, 5, 20, 20);
+  
+        // Marca de Agua
+        try {
+          doc.setGState(new doc.GState({ opacity: 0.1 }));
+        } catch (e) {}
+        const watermarkWidth = 60;
+        const watermarkHeight = 60;
+        const watermarkX = (pageWidth - watermarkWidth) / 2;
+        const watermarkY = (pageHeight - watermarkHeight) / 2;
+        doc.addImage('images/logo.png', 'PNG', watermarkX, watermarkY, watermarkWidth, watermarkHeight);
+        try {
+          doc.setGState(new doc.GState({ opacity: 1 }));
+        } catch (e) {}
+  
+        // Contenido Principal
+        let y = 40;
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(16);
+        doc.text("Estadísticas del Jugador", pageWidth / 2, y, { align: "center" });
+        y += 10;
+        doc.setFontSize(12);
+        doc.text("Jugador: " + nombre, 10, y);
+        y += 10;
+        doc.text("Partido: " + partido, 10, y);
+        y += 10;
+        doc.text("Asistencias: " + asistencias, 10, y);
+        y += 10;
+        doc.text("Goles: " + goles, 10, y);
+        y += 10;
+        doc.text("Tarjetas: " + tarjetas, 10, y);
+        y += 10;
+        doc.text("Lesiones: " + lesiones, 10, y);
+        y += 10;
+        doc.text("Fecha: " + fecha, 10, y);
+        y += 10;
+  
+        // Agregar el gráfico individual (del modal) convertido a imagen
+        const canvas = document.getElementById('modalChart');
+        if (canvas) {
+          const imgData = canvas.toDataURL('image/png');
+          doc.addImage(imgData, 'PNG', 10, y, 180, 80);
+          y += 90;
+        }
+  
+        // Pie de Página
+        doc.setFontSize(8);
+        doc.setTextColor(100);
+        let footerY = pageHeight - 50;
+        doc.text("Contactos: Universidad de las Fuerzas Armadas ESPE | +593 998754321", pageWidth / 2, footerY, { align: "center" });
+        footerY += 5;
+        doc.text("Desarrolladores: Somos desarrolladores de software, apasionados por la tecnología.", pageWidth / 2, footerY, { align: "center" });
+        footerY += 5;
+        doc.text("La mejor información del deporte", pageWidth / 2, footerY, { align: "center" });
+        doc.setLineWidth(0.5);
+        doc.line(10, pageHeight - 20, pageWidth - 10, pageHeight - 20);
+        doc.setFontSize(10);
+        doc.setTextColor(128, 128, 128);
+        doc.text("2025 Todos los derechos reservados. Diseño por Programación Web-Cuarto Semestre", pageWidth / 2, pageHeight - 10, { align: "center" });
+  
+        // Guardar el PDF
+        doc.save("Estadisticas_" + nombre + ".pdf");
+      }
+  
+      // Función para editar una estadística (desde la tabla)
+      window.editarEstadistica = function (btn) {
+        const row = btn.closest('tr');
+        const index = row.dataset.index;
+        const stat = estadisticasData[index];
+        // Cargar datos en el formulario
+        let partes = stat.partido.split(" VS ");
+        document.getElementById('equipoA').value = partes[0] || "";
+        document.getElementById('equipoB').value = partes[1] || "";
+        document.getElementById('nombreJugador').value = stat.nombre_jugador;
+        document.getElementById('asistencias').value = stat.asistencias;
+        document.getElementById('goles').value = stat.goles;
+        document.getElementById('tarjetas').value = stat.tarjetas;
+        document.getElementById('lesiones').value = stat.lesiones;
+        document.getElementById('fecha').value = stat.fecha;
+        currentEditIndex = index;
+      }
+    });
+  </script>
+  
+</body>
+</html>

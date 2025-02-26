@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Jugadores</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="icon" href="images/fevicon.png" type="image/gif" />
+  <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css" />
+  <link rel="stylesheet" href="css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+  <!-- Encabezado y menú de navegación -->
+  <div class="header_section">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="logo"><a href="index.html"><img src="images/logo.png" style="width: 100px;" alt="Logo"></a></div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">El Once Ideal</a></li>
+          <li class="nav-item active"><a class="nav-link" href="registro.html">Registro</a></li>
+          <li class="nav-item"><a class="nav-link" href="estadios.html">Estadios</a></li>
+          <li class="nav-item"><a class="nav-link" href="estadistica.html">Estadísticas</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Sección principal -->
+  <div class="news_section layout_padding">
+    <div class="container">
+      <h1>Registro de Jugador</h1>
+
+      <!-- Formulario de Registro de Jugadores -->
+      <form id="formRegistro" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="txtNombreJugador">Nombre del Jugador</label>
+          <input type="text" class="form-control" name="nombre" id="txtNombreJugador" required />
+        </div>
+        <div class="form-group">
+          <label for="txtEquipo">Equipo</label>
+          <!-- Se utiliza un select para asegurar la selección de un equipo válido -->
+          <select class="form-control" name="equipo" id="txtEquipo" required>
+            <option value="">Seleccione Equipo</option>
+    <option value="Dep. Cuenca">Dep. Cuenca</option>
+    <option value="Barcelona SC">Barcelona SC</option>
+    <option value="Macará">Macará</option>
+    <option value="U. Católica">U. Católica</option>
+    <option value="Libertad FC">Libertad FC</option>
+    <option value="Aucas">Aucas</option>
+    <option value="Mushuc Runa">Mushuc Runa</option>
+    <option value="Delfín">Delfín</option>
+    <option value="Orense">Orense</option>
+    <option value="LDU Quito">LDU Quito</option>
+    <option value="El Nacional">El Nacional</option>
+    <option value="Cuniburo">Cuniburo</option>
+    <option value="Independiente">Independiente</option>
+    <option value="Técnico Universitario">Técnico Universitario</option>
+    <option value="Manta">Manta</option>
+    <option value="Emelec">Emelec</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="txtFechaNacimiento">Fecha de Nacimiento</label>
+          <input type="date" class="form-control" name="fecha_nacimiento" id="txtFechaNacimiento" required />
+        </div>
+        <div class="form-group">
+          <label for="txtCorreoJugador">Correo</label>
+          <input type="email" class="form-control" name="correo" id="txtCorreoJugador" required />
+        </div>
+        <div class="form-group">
+          <label for="txtImagenJugador">Imagen del Jugador</label>
+          <input type="file" class="form-control" name="imagen" id="txtImagenJugador" accept="image/*" required />
+        </div>
+        <button type="button" class="btn btn-primary" id="btnPrevisualizar">Previsualizar Jugador</button>
+      </form>
+
+      <!-- Filtro para buscar jugadores por nombre -->
+      <div class="form-group mt-4">
+        <input type="text" class="form-control" id="filtroNombre" placeholder="Filtrar por nombre" />
+      </div>
+
+      <!-- Tabla con jugadores registrados -->
+      <h2 class="mt-4">Jugadores Registrados</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Equipo</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Correo</th>
+            <th>Imagen</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="listaJugadores">
+          <!-- Aquí se añadirán los jugadores registrados -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal para Previsualización -->
+  <div class="modal fade" id="modalPrevisualizacion" tabindex="-1" role="dialog"
+    aria-labelledby="modalPrevisualizacionLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalPrevisualizacionLabel">Previsualización de Jugador</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Nombre:</strong> <span id="prevNombre"></span></p>
+          <p><strong>Equipo:</strong> <span id="prevEquipo"></span></p>
+          <p><strong>Fecha de Nacimiento:</strong> <span id="prevFechaNacimiento"></span></p>
+          <p><strong>Correo:</strong> <span id="prevCorreo"></span></p>
+          <img id="prevImagen" src="" alt="Imagen del Jugador"
+            style="max-width: 100%; height: auto; border-radius: 5px; display: block; margin: 0 auto;" />
+
+          <h5 class="mt-3">Previsualización del PDF:</h5>
+          <iframe id="pdfPreview" style="width: 100%; height: 400px; border: none; display: none;"></iframe>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" id="btnRegistrarJugador">Registrar</button>
+          <button type="button" class="btn btn-info" id="btnVerPDF">Vista Previa</button>
+          <button type="button" class="btn btn-success" id="btnDescargarPDF">Descargar PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- sección del pie de página -->
+   <div class="footer_section layout_padding">
+    <div class="container">
+       <div class="row">
+          <div class="col-lg-3 col-sm-6">
+             <div class="footer_logo"><a href="index.html"><img src="images/logo.png"></a></div>
+             <h1 class="adderss_text">Contactos</h1>
+             <div class="map_icon"><img src="images/map-icon.png"><span class="paddlin_left_0">Universidad de las Fuerzas Armadas Espe</span></div>
+             <div class="map_icon"><img src="images/call-icon.png"><span class="paddlin_left_0">+593 998754321</span></div>
+             <div class="map_icon"><img src="images/mail-icon.png"><span class="paddlin_left_0">ESPE<a href="https://www.espe.edu.ec/"> AQUÍ</a></span></div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <h1 class="adderss_text">Desarrolladores</h1>
+             <div class="hiphop_text_1">Somos desarrolladores de software, apasionados por la tecnología y las soluciones digitales. Nos dedicamos a diseñar, construir y mantener aplicaciones, sistemas y plataformas que hacen la vida más fácil y conectada.</div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <h1 class="adderss_text">En este caso hemos creado</h1>
+             <div class="Useful_text">Creamos esta página, diseñada para vivir el fútbol como nunca antes</div>
+          </div>
+          <div class="col-lg-3 col-sm-6">
+             <h1 class="adderss_text">La mejor información del deporte</h1>
+             <div class="subscribe_bt"><a href="#">Regresar al Inicio</a></div>
+             <div class="social_icon">
+                <ul>
+                   <li><a href="https://es-es.facebook.com/"><img src="images/fb-icon.png"></a></li>
+                   <li><a href="https://x.com/?mx=2"><img src="images/twitter-icon.png"></a></li>
+                   <li><a href="https://es.linkedin.com/"><img src="images/linkedin-icon.png"></a></li>
+                   <li><a href="https://www.instagram.com/"><img src="images/instagram-icon.png"></a></li>
+                </ul>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ <!-- fin de la sección del pie de página -->
+ <!-- sección de derechos de autor -->
+ <div class="copyright_section">
+    <div class="container">
+       <p class="copyright_text">2025 Todos los derechos reservados. Diseño por <a href="https://www.espe.edu.ec/">Programación Web-Cuarto Semestre</a></p>
+    </div>
+ </div>
+
+  <!-- Scripts -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="js/custom.js"></script>
+  <script>
+    let imagenJugador;
+    let currentEditRow = null; // Variable global para saber si estamos editando
+
+    // Capturar imagen seleccionada
+    document.getElementById('txtImagenJugador').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          imagenJugador = e.target.result; // Guardar la imagen en una variable
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Previsualizar la información del jugador en el modal
+    document.getElementById('btnPrevisualizar').addEventListener('click', function () {
+      const nombre = document.getElementById('txtNombreJugador').value;
+      const equipo = document.getElementById('txtEquipo').value;
+      const fechaNacimiento = document.getElementById('txtFechaNacimiento').value;
+      const correo = document.getElementById('txtCorreoJugador').value;
+
+      // Verificar que se hayan completado los campos
+      if (!nombre || !equipo || !fechaNacimiento || !correo || !imagenJugador) {
+        alert("Por favor, complete todos los campos y seleccione una imagen.");
+        return;
+      }
+
+      // Actualizar la previsualización en el modal
+      document.getElementById('prevNombre').textContent = nombre;
+      document.getElementById('prevEquipo').textContent = equipo;
+      document.getElementById('prevFechaNacimiento').textContent = fechaNacimiento;
+      document.getElementById('prevCorreo').textContent = correo;
+      document.getElementById('prevImagen').src = imagenJugador;
+
+      // Ocultar la previsualización del PDF si estuviera visible
+      document.getElementById('pdfPreview').style.display = 'none';
+
+      // Mostrar el modal de previsualización (Bootstrap 5)
+      const modal = new bootstrap.Modal(document.getElementById('modalPrevisualizacion'));
+      modal.show();
+    });
+
+    // Registrar o actualizar el jugador al confirmar en el modal
+    document.getElementById('btnRegistrarJugador').addEventListener('click', function () {
+      registrarJugador();
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalPrevisualizacion'));
+      modal.hide();
+    });
+
+    // Ver previsualización del PDF
+    document.getElementById('btnVerPDF').addEventListener('click', function () {
+      generarPDF(true); // true para vista previa
+    });
+
+    // Descargar PDF
+    document.getElementById('btnDescargarPDF').addEventListener('click', function () {
+      generarPDF(false); // false para descarga
+    });
+
+    // Función para generar el PDF usando jsPDF
+    function generarPDF(preview) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const nombre = document.getElementById('prevNombre').textContent;
+      const equipo = document.getElementById('prevEquipo').textContent;
+      const fechaNacimiento = document.getElementById('prevFechaNacimiento').textContent;
+      const correo = document.getElementById('prevCorreo').textContent;
+      const imagenData = document.getElementById('prevImagen').src;
+
+      // 1. Encabezado
+      doc.setFillColor(0, 66, 126);
+      doc.rect(0, 0, doc.internal.pageSize.getWidth(), 30, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(20);
+      doc.text("El Once Ideal", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+      // Agregar logo (se asume que la imagen es accesible)
+      doc.addImage('images/logo.png', 'PNG', 10, 5, 20, 20);
+
+      // 2. Marca de Agua (opcional)
+      try {
+        doc.setGState(new doc.GState({ opacity: 0.1 }));
+      } catch (e) { }
+      const watermarkWidth = 60;
+      const watermarkHeight = 60;
+      const watermarkX = (doc.internal.pageSize.getWidth() - watermarkWidth) / 2;
+      const watermarkY = (doc.internal.pageSize.getHeight() - watermarkHeight) / 2;
+      doc.addImage('images/logo.png', 'PNG', watermarkX, watermarkY, watermarkWidth, watermarkHeight);
+      try {
+        doc.setGState(new doc.GState({ opacity: 1 }));
+      } catch (e) { }
+
+      // 3. Información del Jugador
+      let y = 40;
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(16);
+      doc.text("Información del Jugador", doc.internal.pageSize.getWidth() / 2, y, { align: "center" });
+      y += 10;
+      doc.setFontSize(12);
+      doc.text("Nombre: " + nombre, 10, y);
+      // Agregar la imagen del jugador (se adapta el tamaño)
+      if (imagenData) {
+        doc.addImage(imagenData, 'JPEG', 155, y - 5, 38, 50);
+      }
+      y += 15;
+      doc.text("Equipo: " + equipo, 10, y);
+      y += 10;
+      doc.text("Fecha de Nacimiento: " + fechaNacimiento, 10, y);
+      y += 10;
+      doc.text("Correo: " + correo, 10, y);
+
+      // 4. Pie de Página
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+      let footerY = pageHeight - 50;
+      doc.text("Contactos: Universidad de las Fuerzas Armadas ESPE | +593 998754321", pageWidth / 2, footerY, { align: "center" });
+      footerY += 5;
+      doc.text("Desarrolladores: Somos desarrolladores de software, apasionados por la tecnología.", pageWidth / 2, footerY, { align: "center" });
+      footerY += 5;
+      doc.text("La mejor información del deporte", pageWidth / 2, footerY, { align: "center" });
+      doc.setLineWidth(0.5);
+      doc.line(10, pageHeight - 20, pageWidth - 10, pageHeight - 20);
+      doc.setFontSize(10);
+      doc.setTextColor(128, 128, 128);
+      doc.text("2025 Todos los derechos reservados. Diseño por Programación Web-Cuarto Semestre", pageWidth / 2, pageHeight - 10, { align: "center" });
+
+      // 5. Mostrar o Descargar PDF
+      if (preview) {
+        const pdfPreview = document.getElementById('pdfPreview');
+        pdfPreview.src = doc.output('datauristring');
+        pdfPreview.style.display = 'block';
+      } else {
+        doc.save("Jugador_" + nombre + ".pdf");
+      }
+    }
+
+    // Función para registrar o actualizar el jugador
+    function registrarJugador() {
+      const nombre = document.getElementById('txtNombreJugador').value;
+      const equipo = document.getElementById('txtEquipo').value;
+      const fechaNacimiento = document.getElementById('txtFechaNacimiento').value;
+      const correo = document.getElementById('txtCorreoJugador').value;
+
+      // Validar que se hayan completado los campos
+      if (!nombre || !equipo || !fechaNacimiento || !correo || !imagenJugador) {
+        alert("Por favor, complete todos los campos.");
+        return;
+      }
+
+      const tableBody = document.getElementById('listaJugadores');
+
+      if (currentEditRow) {
+        // Actualizar la fila existente
+        currentEditRow.cells[0].innerText = nombre;
+        currentEditRow.cells[1].innerText = equipo;
+        currentEditRow.cells[2].innerText = fechaNacimiento;
+        currentEditRow.cells[3].innerText = correo;
+        currentEditRow.cells[4].querySelector('img').src = imagenJugador;
+        // Actualizar la información de la imagen en un atributo data para uso en la edición
+        currentEditRow.dataset.imagen = imagenJugador;
+        currentEditRow = null; // Limpiar la variable de edición
+      } else {
+        // Crear una nueva fila y agregarla a la tabla
+        const row = document.createElement('tr');
+        // Guardar la imagen en un atributo data de la fila para usarla en edición
+        row.dataset.imagen = imagenJugador;
+        row.innerHTML = `
+          <td>${nombre}</td>
+          <td>${equipo}</td>
+          <td>${fechaNacimiento}</td>
+          <td>${correo}</td>
+          <td><img src="${imagenJugador}" alt="Imagen del Jugador" style="width: 50px; height: auto;"></td>
+          <td>
+            <button class="btn btn-info btn-sm" onclick="editarJugador(this)">Editar</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      }
+
+      // Reiniciar el formulario y la variable de imagen
+      document.getElementById('formRegistro').reset();
+      imagenJugador = null;
+      document.getElementById('prevImagen').src = "";
+    }
+
+    // Función para editar un jugador: carga la información de la fila en el formulario
+    function editarJugador(btn) {
+      const row = btn.closest('tr');
+      const nombre = row.cells[0].innerText;
+      const equipo = row.cells[1].innerText;
+      const fechaNacimiento = row.cells[2].innerText;
+      const correo = row.cells[3].innerText;
+      const imagen = row.dataset.imagen;
+
+      // Cargar los datos en el formulario
+      document.getElementById('txtNombreJugador').value = nombre;
+      document.getElementById('txtEquipo').value = equipo;
+      document.getElementById('txtFechaNacimiento').value = fechaNacimiento;
+      document.getElementById('txtCorreoJugador').value = correo;
+      imagenJugador = imagen; // Actualiza la variable global de imagen
+
+      // Actualizar la previsualización en el modal
+      document.getElementById('prevNombre').textContent = nombre;
+      document.getElementById('prevEquipo').textContent = equipo;
+      document.getElementById('prevFechaNacimiento').textContent = fechaNacimiento;
+      document.getElementById('prevCorreo').textContent = correo;
+      document.getElementById('prevImagen').src = imagenJugador;
+
+      // Guardar la fila actual para saber que estamos editando
+      currentEditRow = row;
+
+      // Mostrar el modal de previsualización para confirmar cambios
+      const modal = new bootstrap.Modal(document.getElementById('modalPrevisualizacion'));
+      modal.show();
+    }
+
+    // Filtro para buscar jugadores por nombre
+    document.getElementById('filtroNombre').addEventListener('input', function () {
+      const filtro = this.value.toLowerCase();
+      const filas = document.querySelectorAll('#listaJugadores tr');
+      filas.forEach(fila => {
+        const nombre = fila.querySelector('td').textContent.toLowerCase();
+        fila.style.display = nombre.includes(filtro) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+
+</html>
